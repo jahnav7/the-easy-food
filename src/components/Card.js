@@ -64,7 +64,8 @@ export default function Card(props) {
                             </div>
                         </div>
                         <hr></hr>
-                        <button className={'btn btn-success justify-center ms-2'} onClick={handleAddToCart}>Add to Cart</button>
+                        {(localStorage.getItem('authToken'))?<button className={'btn btn-success justify-center ms-2'} onClick={handleAddToCart}>Add to Cart</button>:''}
+                
                     </div>
                 </div>
             </div>

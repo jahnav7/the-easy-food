@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react'
+import { useNavigate,Link} from "react-router-dom";
+
 
 export default function Signup() {
   const [cred, setcred] = useState({
@@ -8,6 +9,7 @@ export default function Signup() {
     password: "",
     geolocation: ""
   })
+  let navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,10 +26,16 @@ export default function Signup() {
       })
     });
     const json = await response.json();
-    console.log(json);
-    if (!json.success) {
-      alert("enter valid credentials");
+    if (json.success) {
+      //save the auth toke to local storage and redirect
+      localStorage.setItem('token', json.authToken)
+      navigate("/login")
+
     }
+    else {
+      alert(JSON.stringify(json.errors));
+    }
+    
   };
 
   const onChange = (event) => {
@@ -35,8 +43,15 @@ export default function Signup() {
   };
 
   return (
-    <>
-      <div className="container">
+    <div
+      style={{
+        backgroundImage:
+          'url("https://images.pexels.com/photos/1565982/pexels-photo-1565982.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")',
+        backgroundSize: 'cover',
+        height: '100vh',
+      }}
+    >
+      <div className='container'>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">
@@ -46,6 +61,7 @@ export default function Signup() {
               type="text"
               className="form-control"
               name="name"
+              placeholder="name should be at least five characters"
               value={cred.name}
               onChange={onChange}
             />
@@ -59,6 +75,7 @@ export default function Signup() {
               className="form-control"
               name="email"
               value={cred.email}
+              placeholder="enter a valid email address"
               onChange={onChange}
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
@@ -73,6 +90,7 @@ export default function Signup() {
               className="form-control"
               name="password"
               value={cred.password}
+              placeholder="password must be at least 5 characters"
               onChange={onChange}
               id="exampleInputPassword1"
             />
@@ -90,14 +108,14 @@ export default function Signup() {
               id="address"
             />
           </div>
-          <button type="submit" className="btn btn-primary" >
+          <button type="submit" className="btn btn-primary">
             Submit
           </button>
           <Link to="/login" className="m-3 btn btn-danger">
-            Already a User
+            Already a user
           </Link>
         </form>
       </div>
-    </>
+    </div>
   );
 }
